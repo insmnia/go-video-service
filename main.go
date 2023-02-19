@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-	cmd.InitServer()
+	handler := cmd.InitServer()
 	go func() {
-		err := http.ListenAndServe(":8001", nil)
+		err := http.ListenAndServe(":8001", handler)
 		if err != nil {
 			return
 		}
