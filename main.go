@@ -12,6 +12,7 @@ import (
 func main() {
 	handler := cmd.InitServer()
 	go func() {
+		log.Println("Server started...")
 		err := http.ListenAndServe(":8001", handler)
 		if err != nil {
 			return

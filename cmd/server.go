@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"encoding/json"
 	"go-video-service/config"
 	"go-video-service/database"
+	"go-video-service/internal/api"
 	"go-video-service/internal/middlewares"
 	"log"
 	"net/http"
@@ -24,20 +24,6 @@ func InitServer() *http.ServeMux {
 	}
 	mux := http.NewServeMux()
 
-	indexHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := db.Exec("SELECT * FROM category")
-		if err != nil {
-			return
-		}
-		data, err := json.Marshal(r.Header.Get("userId"))
-		if err != nil {
-			log.Fatalln(err)
-		}
-		_, err = w.Write(data)
-		if err != nil {
-			return
-		}
-	})
-	mux.Handle("/", middlewares.AuthMiddleware(indexHandler, jwtConf))
+	mux.Handle("/api/category/", middlewares.AuthMiddleware(api.NewCategoryAPIHandler(db), jwtConf))
 	return mux
 }
